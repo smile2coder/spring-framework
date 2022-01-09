@@ -84,10 +84,12 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			// 反射创建
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
 			// Must generate CGLIB subclass.
+			// 如果存在方法覆写，则使用CGLIB创建
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
 	}

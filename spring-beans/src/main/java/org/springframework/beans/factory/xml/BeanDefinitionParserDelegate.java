@@ -412,16 +412,20 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		// id
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+		// name
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
 		List<String> aliases = new ArrayList<>();
+		// 将name以MULTI_VALUE_ATTRIBUTE_DELIMITERS分割，生成一个别名列表
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
 		String beanName = id;
+		// 如果id为空且别名不为空，则设置别名为beanName
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isTraceEnabled()) {
@@ -430,12 +434,14 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
+		// 判断beanName和别名不能重复
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-
+		// 解析，生成beanDefinition
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
+			// 检查beanName，如果没有则生成一个
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
@@ -512,15 +518,19 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
+			// 生成GenericBeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			// 设置一系列的参数
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			// meta，其实就是一些自定义的参数
 			parseMetaElements(ele, bd);
+			// lookup
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			// replace-method
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			// 构造方法
 			parseConstructorArgElements(ele, bd);
 			parsePropertyElements(ele, bd);
 			parseQualifierElements(ele, bd);
