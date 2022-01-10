@@ -179,12 +179,17 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		// 如果没有并且该实例正在创建中
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
+				// 二级缓存，查看有没有早期引用，也就是还未完全创建成功的实例
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
+					// 三级缓存，查看有没有对象工厂
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						// 如果有对象工厂，获取实例
 						singletonObject = singletonFactory.getObject();
+						// 将实例放入二级缓存，避免重复创建
 						this.earlySingletonObjects.put(beanName, singletonObject);
+						// 删除对象工厂，以后也用不到了，gc去吧
 						this.singletonFactories.remove(beanName);
 					}
 				}
