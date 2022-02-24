@@ -193,6 +193,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean enforceDestroyMethod = true;
 
+	// 是否是框架本身的，而不是用户自己定义的
 	private boolean synthetic = false;
 
 	private int role = BeanDefinition.ROLE_APPLICATION;
@@ -996,6 +997,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Return whether this bean definition is 'synthetic', that is,
 	 * not defined by the application itself.
 	 */
+	// 是否是框架本身的，而不是用户自己定义的
 	public boolean isSynthetic() {
 		return this.synthetic;
 	}

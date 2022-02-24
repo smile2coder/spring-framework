@@ -296,8 +296,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			// 1. 如果没有从三级缓存的 ObjectFactory 中获取过对象，此时 this.earlyProxyReferences.remove(cacheKey) 为 null, null != bean,尝试创建代理对象
-			// 2. 如果有从三级缓存的 ObjectFactory 中获取过对象，并且没有生成代理对象，则条件变为 bean != bean,不成立，不会再尝试创建代理对象
-			// 3. 如果有从三级缓存的 ObjectFactory 中获取过对象，并且生成代理对象，则条件变为 bean != proxy,不成立，不会再尝试创建代理对象
+			// 2. 如果有从三级缓存的 ObjectFactory 中获取过对象，则条件变为 bean != bean,不成立，不会再尝试创建代理对象
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
